@@ -1,0 +1,31 @@
+name: Test API
+
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4.1.1
+
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v3.1.0
+
+    - name: Build and run with docker-compose
+      run: |
+        docker-compose up -d
+
+    - name: Test API
+      run: |
+        sleep 10  # 少し待ってサーバーが起動するのを確認
+        curl_result=$(curl -s -o /dev/null -w "%{http_code}" -X POST http://localhost:8010/cosine_similarity/ -H "Content-Type: application/json" -d '{"sentence1": "自然言語処理は非常に興味深い分野です。", "sentence2": "自然言語処理には多くの挑戦がありますが、面白いです。"}')
+        if [ "$curl_result" -ne 200 ]; then
+          echo "API Test Failed"
+          exit 1
+        else
+          echo "API Test Passed"
+        fi
+
+    - name: Shutdown
+      run: docker-compose down
