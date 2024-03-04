@@ -1,0 +1,3 @@
+fastapi[all]
+sentence-transformers
+uvicorn[standard]
