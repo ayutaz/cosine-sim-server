@@ -18,7 +18,7 @@ jobs:
 
     - name: Test API
       run: |
-        sleep 10  # 少し待ってサーバーが起動するのを確認
+        sleep 30  # 少し待ってサーバーが起動するのを確認
         curl_result=$(curl -s -o /dev/null -w "%{http_code}" -X POST http://localhost:8010/cosine_similarity/ -H "Content-Type: application/json" -d '{"sentence1": "自然言語処理は非常に興味深い分野です。", "sentence2": "自然言語処理には多くの挑戦がありますが、面白いです。"}')
         if [ "$curl_result" -ne 200 ]; then
           echo "API Test Failed"
